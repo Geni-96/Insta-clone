@@ -1,5 +1,4 @@
-import { Flex, Grid, Image, Button, Skeleton } from '@chakra-ui/react'
-import { FaHeart, FaComment } from "react-icons/fa";
+import { Grid, Skeleton } from '@chakra-ui/react'
 
 import { useState,useEffect } from 'react';
 import ProfilePost from './ProfilePost';
@@ -9,7 +8,7 @@ const ProfilePosts = () => {
   
   useEffect(() => {
     setTimeout(()=> {
-    setIsLoaded(!isLoaded)
+    setIsLoaded(true)
   },2000);
   // return() => clearTimeout(timeout);
 },[]);
@@ -24,8 +23,8 @@ const ProfilePosts = () => {
         <ProfilePost img='img4.png' />
       </Grid>) : 
       (
-        <Grid templateColumns='repeat(3, 1fr)' gap={1}>
-          {[0,1,2,3,4,5].map((_,idx) => (<Skeleton key={idx} height={{base:'100px', sm:'150px', md:'250px',lg:'350px'}} />))}
+        <Grid templateColumns={{base:'repeat(1, 1fr)', md:'repeat(3, 1fr)'}} gap={1}>
+          {[0,1,2,3,4,5].map((_,idx) => (<Skeleton key={idx} aspectRatio={1/1} />))}
         </Grid>
       )}
     </>
