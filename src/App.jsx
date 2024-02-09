@@ -3,15 +3,15 @@ import HomePage from './pages/HomePage/HomePage'
 import AuthPage from './pages/AuthPage/AuthPage'
 import PageLayout from './Layouts/PageLayouts/PageLayout'
 import ProfilePage from './components/Profile/ProfilePage';
-// import useAuthStore from './store/authStore';
+import useAuthStore from './store/authStore';
 
 function App() {
-  // const userLoggedIn = useAuthStore(state => state.user);
+  const userLoggedIn = useAuthStore(state => state.user);
   return (
     <PageLayout>
       <Routes>
-        <Route path="/" element={<HomePage />}></Route>
-        <Route path="/auth" element={<AuthPage />}></Route>
+        <Route path="/" element={userLoggedIn ? <HomePage /> : <Navigate to="/auth" />}></Route>
+        <Route path="/auth" element={!userLoggedIn ? <AuthPage /> : <Navigate to="/" />}></Route>
         <Route path="/:username" element={<ProfilePage />}></Route>
       </Routes>
     </PageLayout>
