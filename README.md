@@ -11,8 +11,10 @@
 - npm i react-icons react-router-dom
 - npm install firebase zustand react-firebase-hooks @chakra-ui/icons
 - Run the project using npm run dev
-<img width="1470" alt="Homepage" src="https://github.com/Geni-96/Insta-clone/assets/122692904/5f492803-e331-4358-a166-2ba132531c1c">
-<img width="1470" alt="Profilepage" src="https://github.com/Geni-96/Insta-clone/assets/122692904/d379d67d-7c1b-4e3d-9b9b-55588e62d3ea">
+<img width="1464" alt="Homepage" src="https://github.com/Geni-96/Insta-clone/assets/122692904/8420a253-3239-469c-be89-6b3c86568503">
+
+
+<img width="1465" alt="Profilepage" src="https://github.com/Geni-96/Insta-clone/assets/122692904/5bbf3008-77a3-40e4-86b7-6e21d3a72793">
 
 
 #### References: 
