@@ -11,7 +11,9 @@
 - npm i react-icons react-router-dom
 - npm install firebase zustand react-firebase-hooks @chakra-ui/icons
 - Run the project using npm run dev
+<img width="1470" alt="Homepage" src="https://github.com/Geni-96/Insta-clone/assets/122692904/5f492803-e331-4358-a166-2ba132531c1c">
+<img width="1470" alt="Profilepage" src="https://github.com/Geni-96/Insta-clone/assets/122692904/d379d67d-7c1b-4e3d-9b9b-55588e62d3ea">
 
-[Application images](https://github.com/Geni-96/Insta-clone/issues/1#issue-2141089327)
+
 #### References: 
 This application is built using [FreeCodeCamp Tutorial](https://www.youtube.com/watch?v=RMScMwY2B6Q&t=8514s)
