@@ -12,5 +12,6 @@
 - npm install firebase zustand react-firebase-hooks @chakra-ui/icons
 - Run the project using npm run dev
 
+[Application images](https://github.com/Geni-96/Insta-clone/issues/1#issue-2141089327)
 #### References: 
 This application is built using [FreeCodeCamp Tutorial](https://www.youtube.com/watch?v=RMScMwY2B6Q&t=8514s)
