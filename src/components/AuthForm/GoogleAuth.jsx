@@ -28,6 +28,7 @@ const GoogleAuth = ({prefix}) => {
         }
 
         else{
+          //sign up
           const userDoc = {
             uid: newUser.user.uid,
             email:newUser.user.email,
