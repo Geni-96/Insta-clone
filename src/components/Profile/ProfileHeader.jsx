@@ -1,14 +1,20 @@
-import { Avatar, Button, Flex, VStack, Text, AvatarGroup } from '@chakra-ui/react'
+import { Avatar, Button, Flex, VStack, Text, AvatarGroup, useDisclosure } from '@chakra-ui/react'
 import React from 'react'
 import useUserProfileStore from '../../store/userProfileStore'
 import useAuthStore from '../../store/authStore';
+import EditProfile from './EditProfile';
+import useFollowUser from '../../hooks/useFollowUser';
 
 const ProfileHeader = () => {
   const {userProfile} = useUserProfileStore();
   const authUser = useAuthStore(state => state.user);
+
   const visitingOwnProfileAndAuth = authUser && authUser.username === userProfile.username;
   const visitingAnotherProfileAndAuth = authUser && authUser.username !== userProfile.username;
+  
+  const {isUpdating,isFollowing,handleFollowUser} = useFollowUser(userProfile?.uid)
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <Flex gap={{ base:4, sm:10 }} py={5} direction={{base:'column', sm:'row'}}>
@@ -18,8 +24,14 @@ const ProfileHeader = () => {
         <VStack gap={2} alignItems={'start'}>
             <Flex gap={4} direction={{base:'column', sm:'row'}} justifyContent={{base:'center', sm:'flex-start'}} alignItems={'center'} w={'full'}>
                 <Text fontSize={12} fontWeight={'bold'}>{userProfile.username}</Text>
-                {visitingOwnProfileAndAuth && (<Button size='xs' bg={'white'} color={'black'} _hover={{bg: 'whiteAlpha.800'}}>Edit Profile</Button>)}
-                {visitingAnotherProfileAndAuth && (<Button size='xs' bg={'blue.500'} color={'white'} _hover={{bg: 'blue.600'}}>Follow</Button>)}
+                {visitingOwnProfileAndAuth && (<Button size='xs' bg={'white'} color={'black'} _hover={{bg: 'whiteAlpha.800'}}
+                onClick={onOpen}>Edit Profile</Button>)}
+                {visitingAnotherProfileAndAuth && (
+                    <Button size='xs' bg={'blue.500'} color={'white'} _hover={{bg: 'blue.600'}}
+                    isLoading={isUpdating}
+                    onClick={handleFollowUser}>
+                        {isFollowing ? 'UnFollow' : 'Follow'}
+                    </Button>)}
                 
             </Flex>
             <Flex gap={8} fontSize={12}>
@@ -34,6 +46,7 @@ const ProfileHeader = () => {
                 {userProfile.bio}
             </Flex>
         </VStack>
+        {isOpen && <EditProfile isOpen={isOpen} onClose={onClose}/>}
     </Flex>
   )
 }

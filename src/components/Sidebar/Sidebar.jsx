@@ -57,7 +57,7 @@ const Sidebar = () => {
                   display={{base:'block',md:'none'}}>
                   <Link
                   display={"flex"}
-                  top={item.link || null}
+                  to={item.link || null}
                   as={RouterLink}
                   alignItems={'center'}
                   gap={4}
