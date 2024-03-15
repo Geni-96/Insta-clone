@@ -1,30 +1,28 @@
-import { Grid, Skeleton } from '@chakra-ui/react'
+import { Flex, Grid, Skeleton, Text } from '@chakra-ui/react'
 
-import { useState,useEffect } from 'react';
+// import { useState,useEffect } from 'react';
 import ProfilePost from './ProfilePost';
+import useGetUserPosts from '../../hooks/useGetUserPosts';
 
 const ProfilePosts = () => {
-  const [isLoaded, setIsLoaded] = useState(false)
   
-  useEffect(() => {
-    setTimeout(()=> {
-    setIsLoaded(true)
-  },2000);
-  // return() => clearTimeout(timeout);
-},[]);
+  const {isLoading,posts}= useGetUserPosts()
+  const noPostsFound = !isLoading && posts.length === 0;
+  if(noPostsFound) return <NoPostsFound />
+
 
   return (
     <>
-      {isLoaded ? (
+      {isLoading ? (
       <Grid templateColumns={{base:'repeat(1, 1fr)', md:'repeat(3, 1fr)'}} gap={1}>
-        <ProfilePost img='img1.png' />
-        <ProfilePost img='img2.png' />
-        <ProfilePost img='img3.png' />
-        <ProfilePost img='img4.png' />
+        {[0,1,2].map((_,idx) => (<Skeleton key={idx} aspectRatio={1/1} />))}
       </Grid>) : 
       (
         <Grid templateColumns={{base:'repeat(1, 1fr)', md:'repeat(3, 1fr)'}} gap={1}>
-          {[0,1,2,3,4,5].map((_,idx) => (<Skeleton key={idx} aspectRatio={1/1} />))}
+          
+          {posts.map((post) => (
+          <ProfilePost post={post} key={post.id} />
+        ))}
         </Grid>
       )}
     </>
@@ -33,3 +31,11 @@ const ProfilePosts = () => {
 }
 
 export default ProfilePosts
+
+const NoPostsFound = () =>{
+  return (
+    <Flex flexDir={'column'} textAlign={'center'} mx={'auto'} mt={10}>
+      <Text fontSize={"2xl"}>No Posts Found</Text>
+    </Flex>
+  )
+}

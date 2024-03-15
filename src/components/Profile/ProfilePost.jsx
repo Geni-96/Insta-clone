@@ -5,7 +5,7 @@ import {MdDelete} from 'react-icons/md'
 import Comment from './Comment'
 import PostFooter from '../FeedPosts/PostFooter'
 
-const ProfilePost = ({img}) => {
+const ProfilePost = ({post}) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <>
@@ -42,7 +42,7 @@ const ProfilePost = ({img}) => {
             <Text fontWeight={'bold'} fontSize={16} ml={2}>8</Text>
           </Flex>
         </Flex>
-        <Image src={img} alt='profile post' w={'100%'} h={'100%'} objectFit={'cover'} ></Image>
+        <Image src={post.imageURL} alt='profile post' w={'100%'} h={'100%'} objectFit={'cover'} ></Image>
       </GridItem>
       <Modal isOpen={isOpen} onClose={onClose} isCentered={true} size={{base:"3xl", md:'5xl'}}>
         <ModalOverlay />
@@ -50,7 +50,7 @@ const ProfilePost = ({img}) => {
           <ModalCloseButton />
           <ModalBody bg={'black'} pb={5}>
             <Flex gap={4} w = {{base:"90%", sm:"70%", md:"full"}} mx={'auto'}>
-              <Box flex={1.5} overflow={'hidden'} border={'1px solid'} borderRadius={4} borderColor={'whiteAlpha.300'}><Image src={img} alt="profile post" /></Box>
+              <Box flex={1.5} overflow={'hidden'} border={'1px solid'} borderRadius={4} borderColor={'whiteAlpha.300'}><Image src={post.imageURL} alt="profile post" /></Box>
               <Flex direction={'column'} display={{base:'none', md:'flex'}} flex={1} px={10}>
                 <Flex alignItems={'center'} justifyContent={'space-between'}>
                   <Flex gap={4} alignItems={'center'}>
