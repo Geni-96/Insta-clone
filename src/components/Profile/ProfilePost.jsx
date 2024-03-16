@@ -1,12 +1,53 @@
 import { Avatar, Flex, GridItem, Image, Text, VStack, useDisclosure, Box, Divider, InputGroup, InputRightElement, Input, Button } from "@chakra-ui/react"
 import { Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton } from '@chakra-ui/react'
-import { FaHeart, FaComment, FaRegComment } from 'react-icons/fa'
+import { FaHeart, FaComment } from 'react-icons/fa'
 import {MdDelete} from 'react-icons/md'
 import Comment from './Comment'
 import PostFooter from '../FeedPosts/PostFooter'
+import useUserProfileStore from "../../store/userProfileStore"
+import useAuthStore from "../../store/authStore"
+import useShowToast from "../../hooks/useShowToast"
+import { deleteObject, ref } from "firebase/storage"
+import { firestore, storage } from "../../firebase/firebase"
+import { arrayRemove, deleteDoc, doc, updateDoc } from "firebase/firestore"
+import usePostStore from "../../store/postStore"
+import { useState } from "react"
 
 const ProfilePost = ({post}) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const userProfile = useUserProfileStore((state) => state.userProfile)
+  const authUser = useAuthStore((state)=>state.user);
+  const showToast = useShowToast();
+  const [isDeleting, setIsDeleting] = useState(false)
+  const deletePost = usePostStore((state) => state.deletePost)
+  const decrementPostCount = useUserProfileStore((state) => state.deletePost)
+
+  const handleDeletePost = async() =>{
+    if(!window.confirm("Are you sure you want to delete the post?")) return;
+    if(isDeleting) return;
+
+    try {
+      const imageRef = ref(storage, `posts/${post.id}`);
+      await deleteObject(imageRef)
+      const userRef = doc(firestore, "users", authUser.uid);
+      await deleteDoc(doc(firestore,"posts", post.id));
+
+      await updateDoc(userRef,{
+        posts: arrayRemove(post.id),
+      })
+
+      deletePost(post.id);
+      decrementPostCount(post.id);
+      showToast('Success',"Post deleted successfully",'success')
+      
+    } catch (error) {
+        showToast("Error",error.message,'error')
+    }
+    finally{
+      setIsDeleting(false);
+    }
+  }
+
   return (
     <>
       <GridItem cursor={"pointer"}
@@ -35,11 +76,11 @@ const ProfilePost = ({post}) => {
         >
           <Flex>
             <FaHeart />
-            <Text fontWeight={'bold'} fontSize={16} ml={2}>46</Text>
+            <Text fontWeight={'bold'} fontSize={16} ml={2}>{post.likes.length}</Text>
           </Flex>
           <Flex>
             <FaComment />
-            <Text fontWeight={'bold'} fontSize={16} ml={2}>8</Text>
+            <Text fontWeight={'bold'} fontSize={16} ml={2}>{post.comments.length}</Text>
           </Flex>
         </Flex>
         <Image src={post.imageURL} alt='profile post' w={'100%'} h={'100%'} objectFit={'cover'} ></Image>
@@ -49,22 +90,32 @@ const ProfilePost = ({post}) => {
         <ModalContent>
           <ModalCloseButton />
           <ModalBody bg={'black'} pb={5}>
-            <Flex gap={4} w = {{base:"90%", sm:"70%", md:"full"}} mx={'auto'}>
-              <Box flex={1.5} overflow={'hidden'} border={'1px solid'} borderRadius={4} borderColor={'whiteAlpha.300'}><Image src={post.imageURL} alt="profile post" /></Box>
+            <Flex gap={4} w = {{base:"90%", sm:"70%", md:"full"}} mx={'auto'} maxH={'90vh'} minH={'50vh'}>
+              <Flex flex={1.5} overflow={'hidden'} border={'1px solid'} borderRadius={4} borderColor={'whiteAlpha.300'} justifyContent={'center'} alignItems={'center'}>
+                <Image src={post.imageURL} alt="profile post" />
+              </Flex>
               <Flex direction={'column'} display={{base:'none', md:'flex'}} flex={1} px={10}>
                 <Flex alignItems={'center'} justifyContent={'space-between'}>
                   <Flex gap={4} alignItems={'center'}>
-                    <Avatar src='profilepic.png' size={'sm'} alt='profilepic'></Avatar>
-                    <Text fontWeight={'bold'} fontSize={12}>asaprogrammer_</Text>
+                    <Avatar src={userProfile.profilePicURL} size={'sm'} alt='profilepic'></Avatar>
+                    <Text fontWeight={'bold'} fontSize={12}>{userProfile.username}</Text>
                   </Flex>
-                  <Box borderRadius={4} p={1} _hover={{color:'red.600', bg:'whiteAlpha.300'}} overflow={'hidden'}><MdDelete size={20} cursor={'pointer'}/></Box>
+                  {authUser?.uid == userProfile.uid && (
+                    <Button size={'sm'} bg={'transparent'} borderRadius={4} p={1} 
+                    _hover={{color:'red.600', bg:'whiteAlpha.300'}}
+                    overflow={'hidden'}
+                    onClick={handleDeletePost}
+                    isLoading={isDeleting}>
+                      <MdDelete size={20} cursor={'pointer'}/>
+                    </Button>
+                  )}
                 </Flex>
                 <Divider bg={'white'} my={4}/>
                 <VStack maxH={'350px'} overflowY={'auto'} alignItems={'start'} h={'full'}>
                   <Comment
-                    profilePic = 'profilepic.png'
-                    comment="Dummy images from newssplash"
-                    username="asaprogrammer_"
+                    profilePic = {userProfile.profilePicURL}
+                    comment={post.caption}
+                    username={userProfile.username}
                     createdAt='1d ago'
                   />
                   <Comment 
