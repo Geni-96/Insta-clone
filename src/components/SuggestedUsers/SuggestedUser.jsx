@@ -3,7 +3,7 @@ import useFollowUser from "../../hooks/useFollowUser"
 import useAuthStore from "../../store/authStore"
 
 const SuggestedUser = ({user,setUser}) => {
-    const {isUpdating,isFollowing,handleFollowUser} = useFollowUser(user.uid)
+    const {isUpdating,isFollowing,handleFollowUser} = useFollowUser(user.uid);
     const authUser = useAuthStore((state) =>  state.user)
 
     const onFollowUser = async () =>{

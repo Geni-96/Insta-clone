@@ -2,7 +2,7 @@ import { Avatar, Flex, GridItem, Image, Text, VStack, useDisclosure, Box, Divide
 import { Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton } from '@chakra-ui/react'
 import { FaHeart, FaComment } from 'react-icons/fa'
 import {MdDelete} from 'react-icons/md'
-import Comment from './Comment'
+import Comment from '../Comment/Comment'
 import PostFooter from '../FeedPosts/PostFooter'
 import useUserProfileStore from "../../store/userProfileStore"
 import useAuthStore from "../../store/authStore"
@@ -12,6 +12,7 @@ import { firestore, storage } from "../../firebase/firebase"
 import { arrayRemove, deleteDoc, doc, updateDoc } from "firebase/firestore"
 import usePostStore from "../../store/postStore"
 import { useState } from "react"
+import Caption from "../Comment/Caption"
 
 const ProfilePost = ({post}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -21,6 +22,7 @@ const ProfilePost = ({post}) => {
   const [isDeleting, setIsDeleting] = useState(false)
   const deletePost = usePostStore((state) => state.deletePost)
   const decrementPostCount = useUserProfileStore((state) => state.deletePost)
+  // console.log(post.likes.length)
 
   const handleDeletePost = async() =>{
     if(!window.confirm("Are you sure you want to delete the post?")) return;
@@ -112,26 +114,14 @@ const ProfilePost = ({post}) => {
                 </Flex>
                 <Divider bg={'white'} my={4}/>
                 <VStack maxH={'350px'} overflowY={'auto'} alignItems={'start'} h={'full'}>
-                  <Comment
-                    profilePic = {userProfile.profilePicURL}
-                    comment={post.caption}
-                    username={userProfile.username}
-                    createdAt='1d ago'
-                  />
-                  <Comment 
-                    profilePic = 'https://bit.ly/dan-abramov'
-                    comment="Nice pic"
-                    username="callmeDan"
-                    createdAt='36h ago'
-                  />
-                  <Comment
-                    profilePic = 'https://bit.ly/kent-c-dodds'
-                    comment="Looking killer"
-                    username="kingKent"
-                    createdAt='4d ago'
-                  />
+                  {/* Caption */}
+                  {post.caption && <Caption post={post} />}
+                  {/* Comments */}
+                  {post.comments.map(comment=> (
+                    <Comment key={comment.id} comment={comment} />
+                  ))}
                 </VStack>
-                <PostFooter isProfilePage={true}/>
+                <PostFooter isProfilePage={true} post={post} />
               </Flex>
             </Flex>
           </ModalBody>
